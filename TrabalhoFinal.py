@@ -150,7 +150,7 @@ def criar_todas_as_tabelas(conn):
             print (e.pgcode)
             print (e.pgerror)
         else:
-            print("Tabelas criadas com sucesso!")
+            print("Tabela criada com sucesso!")
     conn.commit()
     cur.close()
 
@@ -166,7 +166,7 @@ def remover_todas_as_tabelas(conn):
             print (e.pgcode)
             print (e.pgerror)
         else:
-            print("Tabelas removidas com sucesso!")
+            print("Tabela removida com sucesso!")
     conn.commit()
     cur.close()
 
@@ -188,6 +188,31 @@ def consulta_individual(conn):
         result = cur.fetchall()
         for x in result:
             print(x)
+    cur.close()
+
+def insert(conn):
+    cur = conn.cursor()
+
+    for table_name in tables:
+        print (f"Nome: {table_name}")
+    try:
+        name = input("Digite o nome da tabela que deseja consultar: ").upper()
+        for table_name in tables:
+            table_description = tables[table_name]
+            if (table_name == name):
+                print (f"A tabela foi criada usando o seguinte código: \n{table_description}")
+                new_value = input("Insira os valores em uma tupla. Ex: (101, ABC, 123):\n")
+                query = ['INSERT INTO ', name, ' VALUES ', new_value]
+                sql = ''.join(query)
+                cur.execute(sql)
+    except psycopg2.Error as e:
+        print ("Erro ao inserir valores")
+        print (e.pgcode)
+        print (e.pgerror)
+    else:
+        print (f"Valores Inseridos com sucesso!")
+
+    conn.commit()
     cur.close()
 
 # MAIN
@@ -226,6 +251,9 @@ try:
 
         if (escolha == 1):
             criar_todas_as_tabelas(conn)
+        
+        if (escolha == 3):
+            insert(conn)
 
         if (escolha == 9):
             consulta_individual(conn)

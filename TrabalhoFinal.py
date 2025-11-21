@@ -290,6 +290,7 @@ def consulta_individual(conn):
         print(f"Nome: {table_name}")
     try:
         name = input("Digite o nome da tabela que deseja consultar: ").upper().strip()
+        print (f"A tabela foi gerada usando o seguinte codigo: \n{tables[name]}")
         select = "SELECT * FROM " + name
         cur.execute(select)
     except psycopg2.Error as e:

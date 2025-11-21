@@ -196,7 +196,7 @@ def insert(conn):
     for table_name in tables:
         print (f"Nome: {table_name}")
     try:
-        name = input("Digite o nome da tabela que deseja consultar: ").upper()
+        name = input("Digite o nome da tabela onde deseja inserir: ").upper()
         for table_name in tables:
             table_description = tables[table_name]
             if (table_name == name):
@@ -212,6 +212,34 @@ def insert(conn):
     else:
         print (f"Valores Inseridos com sucesso!")
 
+    conn.commit()
+    cur.close()
+
+def update(conn):
+    cur = conn.cursor()
+
+    for table_name in tables:
+        print (f"Nome: {table_name}")
+    try:
+        name = input("Digite o nome da tabela que deseja atualizar: ").upper()
+        for table_name in tables:
+            table_description = tables[table_name]
+            if (table_name == name):
+                print (f"A tabela foi criada usando o seguinte código: \n{table_description}")
+                atributo = input("Digite o atributo a ser alterado: ")
+                valor = input("Digite o valor a ser atribuido: ")
+                codigo_f = input("Digite a coluna da chave primária: ")
+                codigo = input("Digite o valor numérico da chave primária: ")
+                query = ['UPDATE ', name, ' SET ', atributo, ' = ', valor, ' WHERE ', codigo_f, '= ', codigo]
+                sql = ''.join(query)
+                cur.execute(sql)
+    except psycopg2.Error as e:
+        print ("Erro ao atualizar valor!")
+        print (e.pgcode)
+        print (e.pgerror)
+    else:
+        print (f"Valor atualizado com sucesso!")
+    
     conn.commit()
     cur.close()
 
@@ -254,6 +282,9 @@ try:
         
         if (escolha == 3):
             insert(conn)
+        
+        if (escolha == 4):
+            update(conn)
 
         if (escolha == 9):
             consulta_individual(conn)

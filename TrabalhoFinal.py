@@ -228,7 +228,7 @@ def update(conn):
                 print (f"A tabela foi criada usando o seguinte código: \n{table_description}")
                 atributo = input("Digite o atributo a ser alterado: ")
                 valor = input("Digite o valor a ser atribuido: ")
-                codigo_f = input("Digite a coluna da chave primária: ")
+                codigo_f = input("Digite o nome da coluna da chave primária: ")
                 codigo = input("Digite o valor numérico da chave primária: ")
                 query = ['UPDATE ', name, ' SET ', atributo, ' = ', valor, ' WHERE ', codigo_f, '= ', codigo]
                 sql = ''.join(query)
@@ -243,6 +243,31 @@ def update(conn):
     conn.commit()
     cur.close()
 
+def delete(conn):
+    cur = conn.cursor()
+
+    for table_name in tables:
+        print (f"Nome: {table_name}")
+    try:
+        name = input("Digite o nome da tabela que deseja alterar: ").upper()
+        for table_name in tables:
+            table_description = tables[table_name]
+            if (table_name == name):
+                print (f"A tabela foi criada usando o seguinte código: \n{table_description}")
+                codigo_f = input("Digite o nome da coluna da chave primária: ")
+                codigo = input("Digite o valor numérico da chave primária: ")
+                query = ['DELETE FROM ', name, ' WHERE ', codigo_f, ' = ', codigo]
+                sql = ''.join(query)
+                cur.execute(sql)
+    except psycopg2.Error as e:
+        print ("Erro ao realizar o DELETE!")
+        print (e.pgcode)
+        print (e.pgerror)
+    else:
+        print ("DELETE realizado com sucesso!")
+
+    conn.commit()
+    cur.close()
 # MAIN
 
 try:
@@ -285,6 +310,9 @@ try:
         
         if (escolha == 4):
             update(conn)
+
+        if (escolha == 5):
+            delete(conn)
 
         if (escolha == 9):
             consulta_individual(conn)

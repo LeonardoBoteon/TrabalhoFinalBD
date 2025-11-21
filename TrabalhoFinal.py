@@ -116,6 +116,97 @@ tables = {
     ),
 }
 
+inserts = {'HOTEL': (
+    """INSERT INTO hotel (id_hotel, nome, endereco, contato) values
+    (1, 'Hotel Grand Plaza', 'Av. Atlântica, 1000 - Rio de Janeiro', '21-5555-0001'),
+    (2, 'Pousada Serra Verde', 'Rua das Flores, 50 - Gramado', '54-5555-0002'),
+    (3, 'Resort Beira Mar', 'Rodovia do Sol, Km 10 - Bahia', '71-5555-0003')"""),
+    'PLANO': (
+        """INSERT INTO plano (id_plano, nome, descricao, valor) values
+        (1, 'Standard', 'Apenas café da manhã', 250.00),
+        (2, 'Premium', 'Café e Jantar inclusos', 400.00),
+        (3, 'Deluxe', 'Todas as refeições e bebidas', 800.00)"""),
+    'ITEM': (
+        """INSERT INTO item (id_item, nome, valor) values
+        (1, 'Refrigerante Lata', 8.00),
+        (2, 'Sanduíche Natural', 25.00),
+        (3, 'Jantar Especial', 120.00)"""),
+    'FUNCIONARIO': (
+        """INSERT INTO funcionario (id_funcionario, id_hotel, nome, cpf, tipo) values
+        (1, 1, 'Carlos Silva', '111.111.111-01', 'Faxineiro'),
+        (2, 1, 'Ana Pereira', '111.111.111-02', 'Recepcionista'),
+        (3, 1, 'Roberto Santos', '111.111.111-03', 'Manobrista'),
+        (4, 1, 'Eduardo da Silva', '111.111.111-04', 'Cozinheiro'),
+        (5, 2, 'Mariana Costa', '222.222.222-01', 'Faxineiro'),
+        (6, 2, 'Paulo Lima', '222.222.222-02', 'Recepcionista'),
+        (7, 2, 'Fernanda Alves', '222.222.222-03', 'Manobrista'),
+        (8, 2, 'Augusto Vieira', '222.222.222-04', 'Cozinheiro'),
+        (9, 3, 'Ricardo Oliveira', '333.333.333-01', 'Faxineiro'),
+        (10, 3, 'Juliana Mendes', '333.333.333-02', 'Recepcionista'),
+        (11, 3, 'Lucas Martins', '333.333.333-03', 'Manobrista'),
+        (12, 3, 'Mauricio Ferreira', '333.333.333-04', 'Cozinheiro')"""),
+    'QUARTO': (
+        """INSERT INTO quarto (id_quarto, no_quarto, id_hotel, id_funcionario) values
+        (1, 101, 1, 1),
+        (2, 102, 1, 1),
+        (3, 201, 1, 1),
+        (4, 10, 2, 5),
+        (5, 11, 2, 5),
+        (6, 12, 2, 5),
+        (7, 501, 3, 9), 
+        (8, 502, 3, 9), 
+        (9, 503, 3, 9)"""),
+    'VAGA': (
+        """INSERT INTO vaga (id_vaga, id_hotel, no_vaga) values
+        (1, 1, 10),
+        (2, 1, 11),
+        (3, 1, 12),
+        (4, 2, 1),
+        (5, 2, 2),
+        (6, 3, 100),
+        (7, 3, 101),
+        (8, 3, 102)"""),
+    'RESERVA': (
+        """INSERT INTO reserva (id_reserva, data_entrada, data_saida, conta, id_quarto, id_funcionario, id_plano) values
+        (1, '2023-10-01 14:00', '2023-10-05 12:00', 1200.00, 1, 2, 1),
+        (2, '2023-10-02 14:00', '2023-10-03 12:00', 400.00, 2, 2, 2),
+        (3, '2023-11-10 10:00', '2023-11-15 10:00', 2500.00, 4, 6, 3),
+        (4, '2023-11-12 14:00', '2023-11-14 12:00', 800.00, 5, 6, 2),
+        (5, '2023-12-20 12:00', '2023-12-27 12:00', 5600.00, 7, 10, 3),
+        (6, '2023-12-21 12:00', '2023-12-22 12:00', 800.00, 8, 10, 3),
+        (7, '2024-01-05 14:00', '2024-01-10 12:00', 1500.00, 3, 2, 1),
+        (8, '2024-01-06 14:00', '2024-01-08 12:00', 600.00, 6, 6, 3)"""),
+    'HOSPEDE': (
+        """INSERT INTO hospede (id_hospede, nome, cpf, endereco, contato, id_reserva) values
+        (1, 'João da Silva', '999.888.777-01', 'São Paulo, SP', 'joao@email.com', 1),
+        (2, 'Maria Oliveira', '888.777.666-02', 'Belo Horizonte, MG', 'maria@email.com', 2),
+        (3, 'Pedro Santos', '777.666.555-03', 'Curitiba, PR', 'pedro@email.com', 3),
+        (4, 'Cláudia Raia', '666.555.444-04', 'Rio de Janeiro, RJ', 'claudia@email.com', 4),
+        (5, 'Roberto Justus', '555.444.333-05', 'São Paulo, SP', 'justus@email.com', 5),
+        (6, 'Luciano Huck', '444.333.222-06', 'Angra, RJ', 'luciano@email.com', 6),
+        (7, 'Xuxa Meneghel', '333.222.111-07', 'Santa Rosa, RS', 'xuxa@email.com', 7),
+        (8, 'Fausto Silva', '222.111.000-08', 'São Paulo, SP', 'faustao@email.com', 8)"""),
+    'ANIMAL_ESTIMACAO': (
+        """INSERT INTO animal_estimacao (id_animal, nome, especie, peso, id_reserva) values
+        (1, 'Rex', 'Cachorro', 12.5, 3),
+        (2, 'Mimi', 'Gato', 4.0, 3),
+        (3, 'Thor', 'Cachorro', 25.0, 8)"""),
+    'VEICULO': (
+        """INSERT INTO veiculo (id_veiculo, placa, modelo, cor, id_vaga, id_funcionario, id_reserva) values
+        (1, 'ABC-1234', 'Honda Civic', 'Prata', 1, 3, 1),
+        (2, 'DEF-5678', 'Fiat Toro', 'Vermelho', 4, 7, 3),
+        (3, 'GHI-9012', 'BMW X5', 'Preto', 6, 11, 5),
+        (4, 'JKL-3456', 'Porsche Cayenne', 'Branco', 7, 11, 6),
+        (5, 'MNO-7890', 'Jeep Compass', 'Cinza', 2, 3, 7)"""),
+    'PEDIDO': (
+        """INSERT INTO pedido (id_pedido, valor, id_reserva, id_item, id_funcionario) values
+        (1, 8.00, 1, 1, 4),
+        (2, 25.00, 1, 2, 4),
+        (3, 120.00, 2, 3, 4),
+        (4, 120.00, 5, 3, 12),
+        (5, 8.00, 8, 1, 8)"""
+    )}
+
 drop = {
     'HOSPEDE': "DROP TABLE IF EXISTS hospede CASCADE",
     'VEICULO': "DROP TABLE IF EXISTS veiculo CASCADE",
@@ -163,6 +254,20 @@ def criar_todas_as_tabelas(conn):
             print(e.pgerror)
     cur.close()
 
+def inserir_valores(conn):
+    cur = conn.cursor()
+    for insert_name in inserts:
+        insert_description = inserts[insert_name]
+        try:
+            cur.execute(insert_description)
+        except psycopg2.Error as e:
+            print ("Erro ao inserir valores")
+            print (e.pgcode)
+            print (e.pgerror)
+        else:
+            print ("Valores inseridos com sucesso!")
+    conn.commit()
+    cur.close()
 
 def remover_todas_as_tabelas(conn):
     cur = conn.cursor()
@@ -291,6 +396,93 @@ def delete(conn):
         cur.close()
 
 
+def consulta01(conn):
+    cur = conn.cursor()
+
+    select_query = """
+SELECT 
+    h.nome AS nome_hospede,
+    COUNT(p.id_pedido) AS total_pedidos_realizados,
+    SUM(i.valor) AS valor_total_gasto
+FROM 
+    hospede h
+JOIN 
+    reserva r ON h.id_reserva = r.id_reserva
+JOIN 
+    pedido p ON r.id_reserva = p.id_reserva
+JOIN 
+    item i ON p.id_item = i.id_item
+GROUP BY 
+    h.nome
+ORDER BY 
+    valor_total_gasto DESC"""
+
+    print ("Primeira Consulta: calcula o valor total gasto com pedidos extras (serviço de quarto/itens) por cada hóspede. "
+            "Ela relaciona o hóspede à sua reserva e aos pedidos e itens solicitados durante a estadia")
+    cur.execute(select_query)
+    result = cur.fetchall()
+    for x in result:
+        print(x)
+    
+    cur.close()
+
+def consulta02(conn):
+    cur = conn.cursor()
+
+    select_query = """
+SELECT 
+    hot.nome AS nome_hotel,
+    pl.nome AS nome_plano,
+    COUNT(r.id_reserva) AS quantidade_reservas,
+    SUM(r.conta) AS receita_total
+FROM 
+    hotel hot
+JOIN 
+    quarto q ON hot.id_hotel = q.id_hotel
+JOIN 
+    reserva r ON q.id_quarto = r.id_quarto
+JOIN 
+    plano pl ON r.id_plano = pl.id_plano
+GROUP BY 
+    hot.nome, pl.nome;"""
+
+    print ("Segunda Consulta: Analisa a receita gerada pelas reservas,"
+        " agrupada pelo nome do hotel e pelo tipo de plano escolhido")
+    cur.execute(select_query)
+    result = cur.fetchall()
+    for x in result:
+        print (x)
+    
+    cur.close()
+
+def consulta03(conn):
+    cur = conn.cursor()
+    
+    select_query = """
+SELECT 
+    h.nome AS nome_hotel,
+    COUNT(r.id_reserva) AS total_reservas,
+    AVG(EXTRACT(DAY FROM (r.data_saida - r.data_entrada))) AS media_dias_estadia
+FROM 
+    hotel h
+JOIN 
+    quarto q ON h.id_hotel = q.id_hotel
+JOIN 
+    reserva r ON q.id_quarto = r.id_quarto
+GROUP BY 
+    h.nome
+ORDER BY 
+    media_dias_estadia DESC;"""
+
+    print ("Terceira Consulta: Calcula quantos dias, em média, os hóspedes ficam em cada hotel")
+    cur.execute(select_query)
+    result = cur.fetchall()
+    for x in result:
+        print (x)
+        
+    cur.close()
+
+
 def listar_tabelas_definidas():
     print("Tabelas definidas no dicionário:")
     for table_name in tables:
@@ -300,13 +492,13 @@ def listar_tabelas_definidas():
 MENU = """
 Gerenciador do Banco de Dados
 1  Criar todas as tabelas
-2  Inserir todos os valores (não implementado)
+2  Inserir todos os valores
 3  Insert
 4  Update
 5  Delete
-6  Consulta 01 (não implementado)
-7  Consulta 02 (não implementado)
-8  Consulta 03 (não implementado)
+6  Consulta 01
+7  Consulta 02
+8  Consulta 03
 9  Consulta Tabela Individual
 10 Consulta Text2SQL (não implementado)
 11 Remover todas as tabelas
@@ -343,7 +535,7 @@ def main():
             if escolha == '1':
                 criar_todas_as_tabelas(conn)
             elif escolha == '2':
-                print("Opção 2 ainda não implementada.")
+                inserir_valores(conn)
             elif escolha == '3':
                 insert(conn)
             elif escolha == '4':
@@ -351,11 +543,11 @@ def main():
             elif escolha == '5':
                 delete(conn)
             elif escolha == '6':
-                print("Opção 6 ainda não implementada.")
+                consulta01(conn)
             elif escolha == '7':
-                print("Opção 7 ainda não implementada.")
+                consulta02(conn)
             elif escolha == '8':
-                print("Opção 8 ainda não implementada.")
+                consulta03(conn)
             elif escolha == '9':
                 consulta_individual(conn)
             elif escolha == '10':

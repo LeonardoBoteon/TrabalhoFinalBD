@@ -1,6 +1,8 @@
 import psycopg2
 from dotenv import load_dotenv
 import os
+from google import genai
+from google.genai import types
 
 load_dotenv()
 
@@ -8,6 +10,7 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
 DB_NAME = os.getenv("DB_NAME")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Variaveis
 
@@ -483,6 +486,28 @@ ORDER BY
         
     cur.close()
 
+def text2sql(conn, GEMINI_API_KEY, tables):
+    cur = conn.cursor()
+    consulta = input("Utilizando linguagem natural, descreva a consulta desejada: ")
+    genai_client = genai.Client(api_key=GEMINI_API_KEY)
+    prompt = f'''Considering the database {tables}, 
+            write an SQL query to answer the query: "{consulta}". 
+            The generated queries must attribute an alias for 
+            each column when is not used the column name. 
+            In the answer, present only the SQL query without any formatting or line breaks as a string, 
+            without the ";" character at the end and without the "\" character''' 
+    response = genai_client.models.generate_content(
+        model="gemini-2.5-flash", contents=[prompt], config=types.GenerateContentConfig(
+            temperature = 0.0
+        )
+    )
+    cur.execute(response.text)
+    result = cur.fetchall()
+    for x in result:
+        print (x)
+    
+    cur.close()
+
 
 def listar_tabelas_definidas():
     print("Tabelas definidas no dicionário:")
@@ -552,7 +577,7 @@ def main():
             elif escolha == '9':
                 consulta_individual(conn)
             elif escolha == '10':
-                print("Opção 10 Text2SQL ainda não implementada.")
+                text2sql(conn, GEMINI_API_KEY, tables)
             elif escolha == '11':
                 remover_todas_as_tabelas(conn)
             elif escolha == '12':

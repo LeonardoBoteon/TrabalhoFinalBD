@@ -11,6 +11,8 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
 DB_NAME = os.getenv("DB_NAME")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL")
+
 
 # Variaveis
 
@@ -119,21 +121,25 @@ tables = {
     ),
 }
 
-inserts = {'HOTEL': (
-    """INSERT INTO hotel (id_hotel, nome, endereco, contato) values
+inserts = {
+    'HOTEL': (
+        """INSERT INTO hotel (id_hotel, nome, endereco, contato) values
     (1, 'Hotel Grand Plaza', 'Av. Atlântica, 1000 - Rio de Janeiro', '21-5555-0001'),
     (2, 'Pousada Serra Verde', 'Rua das Flores, 50 - Gramado', '54-5555-0002'),
-    (3, 'Resort Beira Mar', 'Rodovia do Sol, Km 10 - Bahia', '71-5555-0003')"""),
+    (3, 'Resort Beira Mar', 'Rodovia do Sol, Km 10 - Bahia', '71-5555-0003')"""
+    ),
     'PLANO': (
         """INSERT INTO plano (id_plano, nome, descricao, valor) values
         (1, 'Standard', 'Apenas café da manhã', 250.00),
         (2, 'Premium', 'Café e Jantar inclusos', 400.00),
-        (3, 'Deluxe', 'Todas as refeições e bebidas', 800.00)"""),
+        (3, 'Deluxe', 'Todas as refeições e bebidas', 800.00)"""
+    ),
     'ITEM': (
         """INSERT INTO item (id_item, nome, valor) values
         (1, 'Refrigerante Lata', 8.00),
         (2, 'Sanduíche Natural', 25.00),
-        (3, 'Jantar Especial', 120.00)"""),
+        (3, 'Jantar Especial', 120.00)"""
+    ),
     'FUNCIONARIO': (
         """INSERT INTO funcionario (id_funcionario, id_hotel, nome, cpf, tipo) values
         (1, 1, 'Carlos Silva', '111.111.111-01', 'Faxineiro'),
@@ -147,7 +153,8 @@ inserts = {'HOTEL': (
         (9, 3, 'Ricardo Oliveira', '333.333.333-01', 'Faxineiro'),
         (10, 3, 'Juliana Mendes', '333.333.333-02', 'Recepcionista'),
         (11, 3, 'Lucas Martins', '333.333.333-03', 'Manobrista'),
-        (12, 3, 'Mauricio Ferreira', '333.333.333-04', 'Cozinheiro')"""),
+        (12, 3, 'Mauricio Ferreira', '333.333.333-04', 'Cozinheiro')"""
+    ),
     'QUARTO': (
         """INSERT INTO quarto (id_quarto, no_quarto, id_hotel, id_funcionario) values
         (1, 101, 1, 1),
@@ -158,7 +165,8 @@ inserts = {'HOTEL': (
         (6, 12, 2, 5),
         (7, 501, 3, 9), 
         (8, 502, 3, 9), 
-        (9, 503, 3, 9)"""),
+        (9, 503, 3, 9)"""
+    ),
     'VAGA': (
         """INSERT INTO vaga (id_vaga, id_hotel, no_vaga) values
         (1, 1, 10),
@@ -168,7 +176,8 @@ inserts = {'HOTEL': (
         (5, 2, 2),
         (6, 3, 100),
         (7, 3, 101),
-        (8, 3, 102)"""),
+        (8, 3, 102)"""
+    ),
     'RESERVA': (
         """INSERT INTO reserva (id_reserva, data_entrada, data_saida, conta, id_quarto, id_funcionario, id_plano) values
         (1, '2023-10-01 14:00', '2023-10-05 12:00', 1200.00, 1, 2, 1),
@@ -178,7 +187,8 @@ inserts = {'HOTEL': (
         (5, '2023-12-20 12:00', '2023-12-27 12:00', 5600.00, 7, 10, 3),
         (6, '2023-12-21 12:00', '2023-12-22 12:00', 800.00, 8, 10, 3),
         (7, '2024-01-05 14:00', '2024-01-10 12:00', 1500.00, 3, 2, 1),
-        (8, '2024-01-06 14:00', '2024-01-08 12:00', 600.00, 6, 6, 3)"""),
+        (8, '2024-01-06 14:00', '2024-01-08 12:00', 600.00, 6, 6, 3)"""
+    ),
     'HOSPEDE': (
         """INSERT INTO hospede (id_hospede, nome, cpf, endereco, contato, id_reserva) values
         (1, 'João da Silva', '999.888.777-01', 'São Paulo, SP', 'joao@email.com', 1),
@@ -188,19 +198,22 @@ inserts = {'HOTEL': (
         (5, 'Roberto Justus', '555.444.333-05', 'São Paulo, SP', 'justus@email.com', 5),
         (6, 'Luciano Huck', '444.333.222-06', 'Angra, RJ', 'luciano@email.com', 6),
         (7, 'Xuxa Meneghel', '333.222.111-07', 'Santa Rosa, RS', 'xuxa@email.com', 7),
-        (8, 'Fausto Silva', '222.111.000-08', 'São Paulo, SP', 'faustao@email.com', 8)"""),
+        (8, 'Fausto Silva', '222.111.000-08', 'São Paulo, SP', 'faustao@email.com', 8)"""
+    ),
     'ANIMAL_ESTIMACAO': (
         """INSERT INTO animal_estimacao (id_animal, nome, especie, peso, id_reserva) values
         (1, 'Rex', 'Cachorro', 12.5, 3),
         (2, 'Mimi', 'Gato', 4.0, 3),
-        (3, 'Thor', 'Cachorro', 25.0, 8)"""),
+        (3, 'Thor', 'Cachorro', 25.0, 8)"""
+    ),
     'VEICULO': (
         """INSERT INTO veiculo (id_veiculo, placa, modelo, cor, id_vaga, id_funcionario, id_reserva) values
         (1, 'ABC-1234', 'Honda Civic', 'Prata', 1, 3, 1),
         (2, 'DEF-5678', 'Fiat Toro', 'Vermelho', 4, 7, 3),
         (3, 'GHI-9012', 'BMW X5', 'Preto', 6, 11, 5),
         (4, 'JKL-3456', 'Porsche Cayenne', 'Branco', 7, 11, 6),
-        (5, 'MNO-7890', 'Jeep Compass', 'Cinza', 2, 3, 7)"""),
+        (5, 'MNO-7890', 'Jeep Compass', 'Cinza', 2, 3, 7)"""
+    ),
     'PEDIDO': (
         """INSERT INTO pedido (id_pedido, valor, id_reserva, id_item, id_funcionario) values
         (1, 8.00, 1, 1, 4),
@@ -208,7 +221,8 @@ inserts = {'HOTEL': (
         (3, 120.00, 2, 3, 4),
         (4, 120.00, 5, 3, 12),
         (5, 8.00, 8, 1, 8)"""
-    )}
+    )
+}
 
 drop = {
     'HOSPEDE': "DROP TABLE IF EXISTS hospede CASCADE",
@@ -223,6 +237,7 @@ drop = {
     'HOTEL': "DROP TABLE IF EXISTS hotel CASCADE",
     'PLANO': "DROP TABLE IF EXISTS plano CASCADE",
 }
+
 
 # Funcoes
 
@@ -257,6 +272,7 @@ def criar_todas_as_tabelas(conn):
             print(e.pgerror)
     cur.close()
 
+
 def inserir_valores(conn):
     cur = conn.cursor()
     for insert_name in inserts:
@@ -264,13 +280,14 @@ def inserir_valores(conn):
         try:
             cur.execute(insert_description)
         except psycopg2.Error as e:
-            print ("Erro ao inserir valores")
-            print (e.pgcode)
-            print (e.pgerror)
+            print("Erro ao inserir valores")
+            print(e.pgcode)
+            print(e.pgerror)
         else:
-            print ("Valores inseridos com sucesso!")
+            print("Valores inseridos com sucesso!")
     conn.commit()
     cur.close()
+
 
 def remover_todas_as_tabelas(conn):
     cur = conn.cursor()
@@ -293,7 +310,7 @@ def consulta_individual(conn):
         print(f"Nome: {table_name}")
     try:
         name = input("Digite o nome da tabela que deseja consultar: ").upper().strip()
-        print (f"A tabela foi gerada usando o seguinte codigo: \n{tables[name]}")
+        print(f"A tabela foi gerada usando o seguinte codigo: \n{tables[name]}")
         select = "SELECT * FROM " + name
         cur.execute(select)
     except psycopg2.Error as e:
@@ -421,14 +438,14 @@ GROUP BY
 ORDER BY 
     valor_total_gasto DESC"""
 
-    print ("Primeira Consulta: calcula o valor total gasto com pedidos extras (serviço de quarto/itens) por cada hóspede. "
-            "Ela relaciona o hóspede à sua reserva e aos pedidos e itens solicitados durante a estadia")
+    print("Primeira Consulta: calcula o valor total gasto com pedidos extras por cada hóspede.")
     cur.execute(select_query)
     result = cur.fetchall()
     for x in result:
         print(x)
-    
+
     cur.close()
+
 
 def consulta02(conn):
     cur = conn.cursor()
@@ -450,18 +467,18 @@ JOIN
 GROUP BY 
     hot.nome, pl.nome;"""
 
-    print ("Segunda Consulta: Analisa a receita gerada pelas reservas,"
-        " agrupada pelo nome do hotel e pelo tipo de plano escolhido")
+    print("Segunda Consulta: Analisa a receita gerada pelas reservas, agrupada por hotel e tipo de plano.")
     cur.execute(select_query)
     result = cur.fetchall()
     for x in result:
-        print (x)
-    
+        print(x)
+
     cur.close()
+
 
 def consulta03(conn):
     cur = conn.cursor()
-    
+
     select_query = """
 SELECT 
     h.nome AS nome_hotel,
@@ -478,35 +495,85 @@ GROUP BY
 ORDER BY 
     media_dias_estadia DESC;"""
 
-    print ("Terceira Consulta: Calcula quantos dias, em média, os hóspedes ficam em cada hotel")
+    print("Terceira Consulta: Calcula quantos dias, em média, os hóspedes ficam em cada hotel.")
     cur.execute(select_query)
     result = cur.fetchall()
     for x in result:
-        print (x)
-        
+        print(x)
+
     cur.close()
 
-def text2sql(conn, GEMINI_API_KEY, tables):
+
+def text2sql(conn, GEMINI_API_KEY,GEMINI_MODEL, tables):
+    if not GEMINI_API_KEY:
+        print("GEMINI_API_KEY não definida. Verifique o arquivo .env.")
+        return
+
     cur = conn.cursor()
     consulta = input("Utilizando linguagem natural, descreva a consulta desejada: ")
+
     genai_client = genai.Client(api_key=GEMINI_API_KEY)
-    prompt = f'''Considering the database {tables}, 
-            write an SQL query to answer the query: "{consulta}". 
-            The generated queries must attribute an alias for 
-            each column when is not used the column name. 
-            In the answer, present only the SQL query without any formatting or line breaks as a string, 
-            without the ";" character at the end and without the "\" character''' 
-    response = genai_client.models.generate_content(
-        model="gemini-2.5-flash", contents=[prompt], config=types.GenerateContentConfig(
-            temperature = 0.0
+
+    prompt = f"""
+You received the following query description in natural language: "{consulta}".
+Consider only the tables and columns defined in this database structure: {tables}.
+Your task is to convert the description into a valid PostgreSQL SQL query.
+
+Mandatory rules:
+1. The query must be a fully working SELECT statement.
+2. Use an alias for any column when its original name is not used directly.
+3. Do not use formatting characters such as "\\" or ";" at the end of the query.
+4. Do not invent tables, columns, or relationships that do not exist in the provided dictionary.
+5. If the query requires joins, briefly explain each join before showing the final SQL query.
+6. The answer must contain two parts in this exact order:
+   a) A short explanation in natural language describing the reasoning and how the tables are related.
+   b) The final SQL query in a single line, without a semicolon at the end.
+"""
+
+    try:
+        response = genai_client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=[prompt],
+            config=types.GenerateContentConfig(
+                temperature=0.0
+            )
         )
-    )
-    cur.execute(response.text)
-    result = cur.fetchall()
-    for x in result:
-        print (x)
-    
-    cur.close()
+    except Exception as e:
+        print(f"Erro ao chamar o modelo Gemini: {e}")
+        cur.close()
+        return
+
+    full_text = response.text.strip() if hasattr(response, "text") else str(response)
+    print("\nResposta completa do modelo (explicação + SQL):")
+    print(full_text)
+
+    lines = [line.strip() for line in full_text.splitlines() if line.strip()]
+    sql_line = None
+    for line in reversed(lines):
+        if line.lower().startswith("select"):
+            sql_line = line
+            break
+
+    if not sql_line:
+        print("\nNão foi possível identificar a consulta SQL na resposta do modelo.")
+        cur.close()
+        return
+
+    print("\nSQL que será executado:")
+    print(sql_line)
+
+    try:
+        cur.execute(sql_line)
+        result = cur.fetchall()
+        print("\nResultados da consulta:")
+        for row in result:
+            print(row)
+    except psycopg2.Error as e:
+        print("\nErro ao executar a consulta SQL gerada:")
+        print(e.pgcode)
+        print(e.pgerror)
+    finally:
+        cur.close()
 
 
 def listar_tabelas_definidas():
@@ -526,7 +593,7 @@ Gerenciador do Banco de Dados
 7  Consulta 02
 8  Consulta 03
 9  Consulta Tabela Individual
-10 Consulta Text2SQL (não implementado)
+10 Consulta Text2SQL
 11 Remover todas as tabelas
 12 Listar tabelas definidas
 0  Sair do Programa
@@ -577,7 +644,7 @@ def main():
             elif escolha == '9':
                 consulta_individual(conn)
             elif escolha == '10':
-                text2sql(conn, GEMINI_API_KEY, tables)
+                text2sql(conn, GEMINI_API_KEY,GEMINI_MODEL, tables)
             elif escolha == '11':
                 remover_todas_as_tabelas(conn)
             elif escolha == '12':
@@ -586,6 +653,7 @@ def main():
         conn.close()
     except ValueError:
         print("Valor inválido")
+        conn.close()
     except Exception as e:
         print(f"Erro inesperado em tempo de execução: {e}")
         conn.close()

@@ -72,9 +72,11 @@ tables = {
         id_quarto integer,
         id_funcionario integer,
         id_plano integer,
+        id_hotel integer,
         FOREIGN KEY(id_quarto) REFERENCES quarto(id_quarto),
         FOREIGN KEY(id_funcionario) REFERENCES funcionario(id_funcionario),
-        FOREIGN KEY(id_plano) REFERENCES plano(id_plano))"""
+        FOREIGN KEY(id_plano) REFERENCES plano(id_plano),
+        FOREIGN KEY(id_hotel) REFERENCES hotel(id_hotel))"""
     ),
     'HOSPEDE': (
         """CREATE TABLE IF NOT EXISTS hospede (
@@ -84,7 +86,9 @@ tables = {
         endereco text,
         contato text,
         id_reserva integer,
-        FOREIGN KEY(id_reserva) REFERENCES reserva(id_reserva))"""
+        id_hotel integer,
+        FOREIGN KEY(id_reserva) REFERENCES reserva(id_reserva),
+        FOREIGN KEY(id_hotel) REFERENCES hotel(id_hotel))"""
     ),
     'VEICULO': (
         """CREATE TABLE IF NOT EXISTS veiculo (
@@ -95,9 +99,11 @@ tables = {
         id_vaga integer,
         id_funcionario integer,
         id_reserva integer,
+        id_hotel integer,
         FOREIGN KEY(id_vaga) REFERENCES vaga(id_vaga),
         FOREIGN KEY(id_funcionario) REFERENCES funcionario(id_funcionario),
-        FOREIGN KEY(id_reserva) REFERENCES reserva(id_reserva))"""
+        FOREIGN KEY(id_reserva) REFERENCES reserva(id_reserva),
+        FOREIGN KEY(id_hotel) REFERENCES hotel(id_hotel))"""
     ),
     'ANIMAL_ESTIMACAO': (
         """CREATE TABLE IF NOT EXISTS animal_estimacao (
@@ -106,7 +112,9 @@ tables = {
         especie varchar(50),
         peso float,
         id_reserva integer,
-        FOREIGN KEY(id_reserva) REFERENCES reserva(id_reserva))"""
+        id_hotel integer,
+        FOREIGN KEY(id_reserva) REFERENCES reserva(id_reserva),
+        FOREIGN KEY(id_hotel) REFERENCES hotel(id_hotel))"""
     ),
     'PEDIDO': (
         """CREATE TABLE IF NOT EXISTS pedido (
@@ -115,9 +123,11 @@ tables = {
         id_reserva integer,
         id_item integer,
         id_funcionario integer,
+        id_hotel integer,
         FOREIGN KEY(id_reserva) REFERENCES reserva(id_reserva),
         FOREIGN KEY(id_item) REFERENCES item(id_item),
-        FOREIGN KEY(id_funcionario) REFERENCES funcionario(id_funcionario))"""
+        FOREIGN KEY(id_funcionario) REFERENCES funcionario(id_funcionario),
+        FOREIGN KEY(id_hotel) REFERENCES hotel(id_hotel))"""
     ),
 }
 
@@ -179,48 +189,48 @@ inserts = {
         (8, 3, 102)"""
     ),
     'RESERVA': (
-        """INSERT INTO reserva (id_reserva, data_entrada, data_saida, conta, id_quarto, id_funcionario, id_plano) values
-        (1, '2023-10-01 14:00', '2023-10-05 12:00', 1200.00, 1, 2, 1),
-        (2, '2023-10-02 14:00', '2023-10-03 12:00', 400.00, 2, 2, 2),
-        (3, '2023-11-10 10:00', '2023-11-15 10:00', 2500.00, 4, 6, 3),
-        (4, '2023-11-12 14:00', '2023-11-14 12:00', 800.00, 5, 6, 2),
-        (5, '2023-12-20 12:00', '2023-12-27 12:00', 5600.00, 7, 10, 3),
-        (6, '2023-12-21 12:00', '2023-12-22 12:00', 800.00, 8, 10, 3),
-        (7, '2024-01-05 14:00', '2024-01-10 12:00', 1500.00, 3, 2, 1),
-        (8, '2024-01-06 14:00', '2024-01-08 12:00', 600.00, 6, 6, 3)"""
+        """INSERT INTO reserva (id_reserva, data_entrada, data_saida, conta, id_quarto, id_funcionario, id_plano, id_hotel) values
+        (1, '2023-10-01 14:00', '2023-10-05 12:00', 1200.00, 1, 2, 1, 1),
+        (2, '2023-10-02 14:00', '2023-10-03 12:00', 400.00, 2, 2, 2, 1),
+        (3, '2023-11-10 10:00', '2023-11-15 10:00', 2500.00, 4, 6, 3, 2),
+        (4, '2023-11-12 14:00', '2023-11-14 12:00', 800.00, 5, 6, 2, 2),
+        (5, '2023-12-20 12:00', '2023-12-27 12:00', 5600.00, 7, 10, 3, 3),
+        (6, '2023-12-21 12:00', '2023-12-22 12:00', 800.00, 8, 10, 3, 3),
+        (7, '2024-01-05 14:00', '2024-01-10 12:00', 1500.00, 3, 2, 1, 1),
+        (8, '2024-01-06 14:00', '2024-01-08 12:00', 600.00, 6, 6, 3, 2)"""
     ),
     'HOSPEDE': (
-        """INSERT INTO hospede (id_hospede, nome, cpf, endereco, contato, id_reserva) values
-        (1, 'João da Silva', '999.888.777-01', 'São Paulo, SP', 'joao@email.com', 1),
-        (2, 'Maria Oliveira', '888.777.666-02', 'Belo Horizonte, MG', 'maria@email.com', 2),
-        (3, 'Pedro Santos', '777.666.555-03', 'Curitiba, PR', 'pedro@email.com', 3),
-        (4, 'Cláudia Raia', '666.555.444-04', 'Rio de Janeiro, RJ', 'claudia@email.com', 4),
-        (5, 'Roberto Justus', '555.444.333-05', 'São Paulo, SP', 'justus@email.com', 5),
-        (6, 'Luciano Huck', '444.333.222-06', 'Angra, RJ', 'luciano@email.com', 6),
-        (7, 'Xuxa Meneghel', '333.222.111-07', 'Santa Rosa, RS', 'xuxa@email.com', 7),
-        (8, 'Fausto Silva', '222.111.000-08', 'São Paulo, SP', 'faustao@email.com', 8)"""
+        """INSERT INTO hospede (id_hospede, nome, cpf, endereco, contato, id_reserva, id_hotel) values
+        (1, 'João da Silva', '999.888.777-01', 'São Paulo, SP', 'joao@email.com', 1, 1),
+        (2, 'Maria Oliveira', '888.777.666-02', 'Belo Horizonte, MG', 'maria@email.com', 2, 1),
+        (3, 'Pedro Santos', '777.666.555-03', 'Curitiba, PR', 'pedro@email.com', 3, 2),
+        (4, 'Cláudia Raia', '666.555.444-04', 'Rio de Janeiro, RJ', 'claudia@email.com', 4, 2),
+        (5, 'Roberto Justus', '555.444.333-05', 'São Paulo, SP', 'justus@email.com', 5, 3),
+        (6, 'Luciano Huck', '444.333.222-06', 'Angra, RJ', 'luciano@email.com', 6, 3),
+        (7, 'Xuxa Meneghel', '333.222.111-07', 'Santa Rosa, RS', 'xuxa@email.com', 7, 1),
+        (8, 'Fausto Silva', '222.111.000-08', 'São Paulo, SP', 'faustao@email.com', 8, 2)"""
     ),
     'ANIMAL_ESTIMACAO': (
-        """INSERT INTO animal_estimacao (id_animal, nome, especie, peso, id_reserva) values
-        (1, 'Rex', 'Cachorro', 12.5, 3),
-        (2, 'Mimi', 'Gato', 4.0, 3),
-        (3, 'Thor', 'Cachorro', 25.0, 8)"""
+        """INSERT INTO animal_estimacao (id_animal, nome, especie, peso, id_reserva, id_hotel) values
+        (1, 'Rex', 'Cachorro', 12.5, 3, 2),
+        (2, 'Mimi', 'Gato', 4.0, 3, 2),
+        (3, 'Thor', 'Cachorro', 25.0, 8, 2)"""
     ),
     'VEICULO': (
-        """INSERT INTO veiculo (id_veiculo, placa, modelo, cor, id_vaga, id_funcionario, id_reserva) values
-        (1, 'ABC-1234', 'Honda Civic', 'Prata', 1, 3, 1),
-        (2, 'DEF-5678', 'Fiat Toro', 'Vermelho', 4, 7, 3),
-        (3, 'GHI-9012', 'BMW X5', 'Preto', 6, 11, 5),
-        (4, 'JKL-3456', 'Porsche Cayenne', 'Branco', 7, 11, 6),
-        (5, 'MNO-7890', 'Jeep Compass', 'Cinza', 2, 3, 7)"""
+        """INSERT INTO veiculo (id_veiculo, placa, modelo, cor, id_vaga, id_funcionario, id_reserva, id_hotel) values
+        (1, 'ABC-1234', 'Honda Civic', 'Prata', 1, 3, 1, 1),
+        (2, 'DEF-5678', 'Fiat Toro', 'Vermelho', 4, 7, 3, 2),
+        (3, 'GHI-9012', 'BMW X5', 'Preto', 6, 11, 5, 3),
+        (4, 'JKL-3456', 'Porsche Cayenne', 'Branco', 7, 11, 6, 3),
+        (5, 'MNO-7890', 'Jeep Compass', 'Cinza', 2, 3, 7, 1)"""
     ),
     'PEDIDO': (
-        """INSERT INTO pedido (id_pedido, valor, id_reserva, id_item, id_funcionario) values
-        (1, 8.00, 1, 1, 4),
-        (2, 25.00, 1, 2, 4),
-        (3, 120.00, 2, 3, 4),
-        (4, 120.00, 5, 3, 12),
-        (5, 8.00, 8, 1, 8)"""
+        """INSERT INTO pedido (id_pedido, valor, id_reserva, id_item, id_funcionario, id_hotel) values
+        (1, 8.00, 1, 1, 4, 1),
+        (2, 25.00, 1, 2, 4, 1),
+        (3, 120.00, 2, 3, 4, 1),
+        (4, 120.00, 5, 3, 12, 3),
+        (5, 8.00, 8, 1, 8, 2)"""
     )
 }
 

@@ -23,11 +23,11 @@ Hotel, Funcionário, Quarto, Vaga, Reserva, Hóspede, Veículo, Animal de Estima
 
 ### Modelo Conceitual (DER)
 
-![Modelo Conceitual](./img/modelo_conceitual.png)
+![Modelo Conceitual](./models/modelo_conceitual.png)
 
 ### Modelo Lógico
 
-![Modelo lógico](./img/modelo_logico.png)
+![Modelo lógico](./models/modelo_logico.png)
 
 ## Script DDL (Criação das Tabelas)
 
@@ -65,19 +65,25 @@ GEMINI_API_KEY=sua_chave
 GEMINI_MODEL=gemini-2.5-flash
 ```
 
-### 2) Instalação das dependências
+### 2) Criação de ambiente virtual
 
 ```
-pip install psycopg2 python-dotenv google-genai matplotlib numpy
+python -m venv venv
 ```
 
-### 3) Execução do sistema
+### 3) Instalação das dependências
+
+```
+pip install -r requirements.txt
+```
+
+### 4) Execução do sistema
 
 ```
 python TrabalhoFinal.py
 ```
 
-### 4) Funcionalidades disponíveis
+### 5) Funcionalidades disponíveis
 
 A aplicação permite:
 
@@ -86,6 +92,7 @@ A aplicação permite:
 * Consultar qualquer tabela
 * Executar consultas analíticas com gráficos
 * Gerar consultas SQL a partir de linguagem natural
+* Listar todas as tabelas
 
 ## Consultas Analíticas com Gráficos
 

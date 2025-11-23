@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 import os
 from google import genai
 from google.genai import types
+import matplotlib.pyplot as plt
+import numpy as np
 
 load_dotenv()
 
@@ -454,6 +456,14 @@ ORDER BY
     for x in result:
         print(x)
 
+    grafico = ['Roberto Justus', 'Maria Oliveira', 'João da Silva', 'Fausto Silva']
+    valores_grafico = [120.0, 120.0, 33.0, 8.0]
+    fig, ax = plt.subplots()
+    bar_container = ax.bar(grafico, valores_grafico)
+    ax.set(ylabel='Valor total gasto', title='Valor gasto com pedidos extras por cada hóspede')
+    ax.bar_label(bar_container, fmt='{:,.0f}')
+    fig.show()
+
     cur.close()
 
 
@@ -461,27 +471,52 @@ def consulta02(conn):
     cur = conn.cursor()
 
     select_query = """
-SELECT 
-    hot.nome AS nome_hotel,
-    pl.nome AS nome_plano,
-    COUNT(r.id_reserva) AS quantidade_reservas,
-    SUM(r.conta) AS receita_total
-FROM 
-    hotel hot
-JOIN 
-    quarto q ON hot.id_hotel = q.id_hotel
-JOIN 
-    reserva r ON q.id_quarto = r.id_quarto
-JOIN 
-    plano pl ON r.id_plano = pl.id_plano
-GROUP BY 
-    hot.nome, pl.nome;"""
+SELECT
+    h.nome AS Nome_Hotel,
+    p.nome AS Tipo_Plano,
+    SUM(r.conta) AS Receita_Total
+FROM
+    RESERVA r
+JOIN
+    HOTEL h ON r.id_hotel = h.id_hotel
+JOIN
+    PLANO p ON r.id_plano = p.id_plano
+GROUP BY
+    h.nome,
+    p.nome
+ORDER BY
+    h.nome,
+    Receita_Total DESC;"""
 
     print("Segunda Consulta: Analisa a receita gerada pelas reservas, agrupada por hotel e tipo de plano.")
     cur.execute(select_query)
     result = cur.fetchall()
     for x in result:
         print(x)
+
+    hoteis = (
+        "Hotel Grand Plaza",
+        "Pousada Serra Verde",
+        "Resort Beira Mar",
+    )
+
+    planos = {
+        "Standard": np.array([2700, 0, 0]),
+        "Premium": np.array([400, 800, 0]),
+        "Deluxe": np.array([0, 0, 6400]),
+    }
+
+    width = 0.5
+
+    fig, ax = plt.subplots()
+    bottom = np.zeros(3)
+
+    for boolean, planos_count in planos.items():
+        p = ax.bar(hoteis, planos_count, width, label=boolean, bottom=bottom)
+        bottom += planos_count
+    ax.set_title("Receita gerada por reservas de acordo com o hotel e o plano adquirido")
+    ax.legend(loc="upper left")
+    plt.show()
 
     cur.close()
 
@@ -510,6 +545,14 @@ ORDER BY
     result = cur.fetchall()
     for x in result:
         print(x)
+
+    grafico = ['Resort Beira Mar', 'Hotel Grand Plaza', 'Pousada Serra Verde']
+    valores_grafico = [4, 2.3, 2.3]
+    fig, ax = plt.subplots()
+    bar_container = ax.bar(grafico, valores_grafico)
+    ax.set(ylabel='Dias hospedados', title='Média de dias de hospedagem por hotel')
+    ax.bar_label(bar_container, fmt='{:,.1f}')
+    fig.show()
 
     cur.close()
 

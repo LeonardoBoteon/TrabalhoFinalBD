@@ -1,1 +1,1 @@
-GEMINI_API_KEY
+in a single line

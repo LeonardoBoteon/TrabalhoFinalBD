@@ -1,7 +1,6 @@
-import os
 import psycopg2
 from dotenv import load_dotenv
-from typing import Optional
+import os
 from google import genai
 from google.genai import types
 import matplotlib.pyplot as plt
@@ -252,7 +251,7 @@ drop = {
 }
 
 
-# Funções de banco
+# Funções
 
 def conectar_banco():
     conn = psycopg2.connect(
@@ -291,13 +290,14 @@ def inserir_valores(conn):
     for insert_name, insert_description in inserts.items():
         try:
             cur.execute(insert_description)
-            conn.commit()
             print(f"Valores inseridos na tabela {insert_name} com sucesso!")
         except psycopg2.Error as e:
             conn.rollback()
             print(f"Erro ao inserir valores na tabela {insert_name}")
             print(e.pgcode)
             print(e.pgerror)
+        else:
+            conn.commit()
     cur.close()
 
 
@@ -330,7 +330,8 @@ def consulta_individual(conn):
 
     try:
         print(f"A tabela foi gerada usando o seguinte código: \n{tables[name]}")
-        select_sql = f"SELECT * FROM {name.lower()}"
+        # Segurança mínima: não concatenar qualquer coisa aleatória
+        select_sql = f'SELECT * FROM {name.lower()}' if name.isupper() else f'SELECT * FROM {name}'
         cur.execute(select_sql)
     except psycopg2.Error as e:
         print("Erro ao consultar tabela")
@@ -437,8 +438,6 @@ def delete(conn):
         cur.close()
 
 
-# Consultas com gráficos
-
 def consulta01(conn):
     cur = conn.cursor()
 
@@ -466,6 +465,7 @@ ORDER BY
     for x in result:
         print(x)
 
+    # Gera gráfico diretamente a partir do resultado, não fica hardcoded
     nomes = [row[0] for row in result]
     valores = [float(row[2]) if row[2] is not None else 0.0 for row in result]
 
@@ -509,10 +509,12 @@ ORDER BY
     for x in result:
         print(x)
 
+    # monta estrutura dinamicamente
     hoteis_unicos = sorted({row[0] for row in result})
     planos_unicos = sorted({row[1] for row in result})
 
     plano_dict = {plano: np.zeros(len(hoteis_unicos)) for plano in planos_unicos}
+
     hotel_index = {hotel: idx for idx, hotel in enumerate(hoteis_unicos)}
 
     for hotel, plano, receita in result:
@@ -524,7 +526,7 @@ ORDER BY
     bottom = np.zeros(len(hoteis_unicos))
 
     for plano, valores in plano_dict.items():
-        ax.bar(hoteis_unicos, valores, width, label=plano, bottom=bottom)
+        p = ax.bar(hoteis_unicos, valores, width, label=plano, bottom=bottom)
         bottom += valores
 
     ax.set_title("Receita gerada por reservas por hotel e plano")
@@ -577,9 +579,7 @@ ORDER BY
     cur.close()
 
 
-# Suporte para extração de SQL
-
-def _extrair_sql_da_resposta(full_text: str) -> Optional[str]:
+def _extrair_sql_da_resposta(full_text: str) -> str | None:
     """
     Tenta extrair a linha com a query SQL a partir do texto completo do modelo.
     Remove cercas de código e pega a última linha que comece com SELECT ou WITH
@@ -612,8 +612,6 @@ def _extrair_sql_da_resposta(full_text: str) -> Optional[str]:
     return sql_line
 
 
-# Text2SQL com explicação em linguagem natural dos resultados
-
 def text2sql(conn, GEMINI_API_KEY, GEMINI_MODEL, tables_dict):
     if not GEMINI_API_KEY:
         print("GEMINI_API_KEY não definida. Verifique o arquivo .env.")
@@ -636,13 +634,13 @@ Your task is to convert the description into a valid PostgreSQL SQL query.
 
 Mandatory rules:
 1. The query must be a fully working SELECT statement.
-2. Use explicit table aliases and column aliases when needed.
-3. Do not use formatting characters such as backslashes, code fences or a semicolon at the end of the query.
+2. Use an alias for any column when its original name is not used directly.
+3. Do not use formatting characters such as "\\" or ";" at the end of the query.
 4. Do not invent tables, columns, or relationships that do not exist in the provided dictionary.
 5. If the query requires joins, briefly explain each join before showing the final SQL query.
 6. The answer must contain two parts in this exact order:
-   a) A short explanation in natural language (in Portuguese) describing the reasoning and how the tables are related.
-   b) On the last line, write ONLY the final SQL query, starting with SELECT and without a semicolon at the end.
+   a) A short explanation in natural language describing the reasoning and how the tables are related.
+   b) On the last line, write ONLY the final SQL query, without a semicolon at the end, starting with SELECT.
 """
 
     try:
@@ -675,55 +673,9 @@ Mandatory rules:
     try:
         cur.execute(sql_line)
         result = cur.fetchall()
-        colnames = [desc[0] for desc in cur.description]
-
-        print("\nResultados da consulta (tuplas cruas):")
+        print("\nResultados da consulta:")
         for row in result:
             print(row)
-
-        if result:
-            resumo_prompt = f"""
-Você é um assistente que explica resultados de consultas SQL para um usuário leigo.
-
-Requisição original em linguagem natural:
-\"\"\"{consulta}\"\"\"
-
-Consulta SQL executada:
-\"\"\"{sql_line}\"\"\"
-
-Nomes das colunas no resultado:
-{colnames}
-
-Linhas retornadas:
-{result}
-
-Tarefa:
-1. Escreva um parágrafo curto, em português, explicando de forma geral o que esses resultados mostram.
-2. Depois, para cada linha retornada (limite de 10 linhas), escreva uma frase simples em português descrevendo aquela linha em linguagem natural.
-   Use os nomes das colunas para montar frases naturais. Por exemplo,
-   se houver um hóspede, um veículo e um quarto, algo como:
-   "Fausto Silva tem o veículo X e está no quarto Y".
-3. Não mostre SQL nem formatação de código. Apenas texto corrido em linguagem natural.
-
-Se nenhuma linha tiver sido retornada, diga claramente que a consulta não encontrou resultados.
-"""
-
-            try:
-                resumo_response = genai_client.models.generate_content(
-                    model=GEMINI_MODEL,
-                    contents=[resumo_prompt],
-                    config=types.GenerateContentConfig(
-                        temperature=0.2
-                    )
-                )
-                resumo_texto = resumo_response.text.strip() if hasattr(resumo_response, "text") else str(resumo_response)
-                print("\nDescrição em linguagem natural dos resultados:")
-                print(resumo_texto)
-            except Exception as e:
-                print(f"\nErro ao gerar descrição em linguagem natural: {e}")
-        else:
-            print("\nA consulta não retornou nenhuma linha.")
-
     except psycopg2.Error as e:
         print("\nErro ao executar a consulta SQL gerada:")
         print(e.pgcode)
